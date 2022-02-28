@@ -94,7 +94,7 @@ func (r *redisCache) Get(key *Key) (*CachedData, error) {
 	val, err := r.client.Get(ctx, key.String()).Result()
 
 	// if key not found in cache
-	if err == redis.Nil || val == pendingTransactionVal {
+	if err == redis.Nil {
 		return nil, ErrMissing
 	}
 
