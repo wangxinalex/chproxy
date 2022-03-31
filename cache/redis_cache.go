@@ -107,6 +107,11 @@ func (r *redisCache) Get(key *Key) (*CachedData, error) {
 	var payload redisCachePayload
 	err = json.Unmarshal([]byte(val), &payload)
 
+	log.Debugf("[get] cache key: %s", key.String())
+	log.Debugf("[get] cached value: %x", payload.Payload)
+	log.Debugf("[get] declared length: %d", payload.Length)
+	log.Debugf("[get] actual length: %d", len(payload.Payload))
+
 	if err != nil {
 		log.Errorf("corrupted payload for key %s with error: %s", key.String(), err)
 		return nil, ErrMissing
@@ -140,6 +145,11 @@ func (r *redisCache) Put(reader io.Reader, contentMetadata ContentMetadata, key 
 	payload := &redisCachePayload{
 		Length: contentMetadata.Length, Type: contentMetadata.Type, Encoding: contentMetadata.Encoding, Payload: string(data),
 	}
+
+	log.Debugf("[put] cache key: %s", key.String())
+	log.Debugf("[put] cached value: %x", payload.Payload)
+	log.Debugf("[put] declared length: %d", payload.Length)
+	log.Debugf("[put] actual length: %d", len(payload.Payload))
 
 	marshalled, err := json.Marshal(payload)
 	if err != nil {
